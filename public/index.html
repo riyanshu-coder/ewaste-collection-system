@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Waste Collection System</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef8f1;
+            color: #20352a;
+        }
+
+        header {
+            background: #128052;
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0 0 10px; }
+
+        nav {
+            background: #075e3b;
+            padding: 13px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1050px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000010;
+        }
+
+        h2 { color: #128052; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd8cf;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            background: #128052;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 15px;
+        }
+
+        button:hover { background: #075e3b; }
+
+        .message { margin-top: 12px; font-weight: bold; }
+        .centres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+        .centre {
+            padding: 15px;
+            background: #f0faf3;
+            border: 1px solid #d5ebdc;
+            border-radius: 8px;
+        }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e8e2;
+            text-align: left;
+        }
+
+        th { background: #e7f5eb; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #075e3b;
+            color: white;
+        }
+
+/* Dashboard */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #00000010;
+    border-left: 5px solid #128052;
+}
+
+.stat-card h3 {
+    margin: 0 0 12px;
+    color: #52665a;
+    font-size: 15px;
+}
+
+.stat-card .number {
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+    color: #128052;
+}
+
+.dashboard-heading {
+    color: #128052;
+    margin-bottom: 16px;
+}
+
+@media (max-width: 650px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+
+        @media (max-width: 650px) {
+            .grid, .centres { grid-template-columns: 1fr; }
+            nav a { display: inline-block; margin: 6px; }
+        }
+        
+/* Dashboard Design */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 20px 0;
+}
+
+.stat-card {
+    background: #effaf3;
+    border: 1px solid #ccebd7;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 12px rgba(0, 80, 50, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0, 80, 50, 0.14);
+}
+
+.stat-card h3 {
+    color: #24513b;
+    font-size: 16px;
+    margin: 0 0 12px;
+}
+
+.stat-card p {
+    color: #128451;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+}
+
+#refreshDashboard {
+    background: #087b4b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#refreshDashboard:hover {
+    background: #065f3b;
+}
+
+@media (max-width: 700px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card p {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 420px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>♻️ E-Waste Collection System</h1>
+    <p>Recycle responsibly. Protect our environment.</p>
+</header>
+
+<nav>
+    <a href="#centres">Recycling Centres</a>
+    <a href="#register">Register</a>
+    <a href="#collection">Request Collection</a>
+    <a href="#requests">View Requests</a>
+</nav>
+
+<main>
+    
+<section class="card" id="dashboard">
+    <h2>📊 Dashboard Overview</h2>
+
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p id="totalUsers">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Requests</h3>
+            <p id="totalRequests">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending Requests</h3>
+            <p id="pendingRequests">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Collected Requests</h3>
+            <p id="collectedRequests">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Recycled Requests</h3>
+            <p id="recycledRequests">0</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Collected Weight</h3>
+            <p><span id="totalCollectedWeight">0</span> kg</p>
+        </div>
+    </div>
+
+    <button type="button" id="refreshDashboard">
+        Refresh Dashboard
+    </button>
+</section>
+
+    <section class="card" id="centres">
+        <h2>🏢 Recycling Centres</h2>
+        <div id="centreList" class="centres">Loading centres...</div>
+    </section>
+
+    <section class="card" id="register">
+        <h2>👤 User Registration</h2>
+
+        <form id="registerForm">
+            <div class="grid">
+                <div>
+                    <label for="name">Full Name</label>
+                    <input id="name" name="name" required>
+                </div>
+
+                <div>
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" required>
+                </div>
+
+                <div>
+                    <label for="phone">Phone</label>
+                    <input id="phone" name="phone" type="tel" required>
+                </div>
+
+                <div>
+                    <label for="address">Address</label>
+                    <input id="address" name="address" required>
+                </div>
+            </div>
+
+            <button type="submit">Register User</button>
+            <div id="registerMessage" class="message" role="status"></div>
+        </form>
+    </section>
+
+    <section class="card" id="collection">
+        <h2>📦 Request E-Waste Collection</h2>
+
+        <form id="requestForm">
+            <div class="grid">
+                <div>
+                    <label for="userId">Registered User ID</label>
+                    <input id="userId" name="user_id" type="number"
+                           min="1" required>
+                </div>
+
+                <div>
+                    <label for="centreId">Recycling Centre</label>
+                    <select id="centreId" name="centre_id">
+                        <option value="">No centre selected</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="itemType">E-Waste Item</label>
+                    <select id="itemType" name="item_type" required>
+                        <option value="">Select item</option>
+                        <option>Mobile Phone</option>
+                        <option>Laptop</option>
+                        <option>Computer</option>
+                        <option>Television</option>
+                        <option>Battery</option>
+                        <option>Other Electronics</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="condition">Item Condition</label>
+                    <select id="condition" name="item_condition" required>
+                        <option value="">Select condition</option>
+                        <option>Working</option>
+                        <option>Damaged</option>
+                        <option>Not Working</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="weight">Estimated Weight (kg)</label>
+                    <input id="weight" name="estimated_weight"
+                           type="number" min="0.01" step="0.01" required>
+                </div>
+
+                <div>
+                    <label for="date">Preferred Collection Date</label>
+                    <input id="date" name="collection_date" type="date">
+                </div>
+            </div>
+
+            <button type="submit">Submit Collection Request</button>
+            <div id="requestMessage" class="message" role="status"></div>
+        </form>
+    </section>
+
+    <section class="card" id="requests">
+        <h2>📋 Collection Requests</h2>
+        <button id="refreshRequests" type="button">Refresh Requests</button>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Item</th>
+                        <th>Weight (kg)</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="requestList">
+                    <tr><td colspan="6">Loading requests...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>♻️ E-Waste Collection System | DBMS Mini Project</p>
+</footer>
+
+<script>
+    const $ = id => document.getElementById(id);
+
+    async function api(url, options = {}) {
+        const response = await fetch(url, options);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Something went wrong');
+        }
+
+        return data;
+    }
+
+    function showMessage(id, message, success) {
+        $(id).textContent = message;
+        $(id).style.color = success ? '#128052' : '#c62828';
+    }
+
+    async function loadCentres() {
+        try {
+            const centres = await api('/api/centres');
+            $('centreList').replaceChildren();
+            $('centreId').replaceChildren();
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'No centre selected';
+            $('centreId').appendChild(placeholder);
+
+            if (!centres.length) {
+                $('centreList').textContent = 'No centres available yet.';
+            }
+
+            centres.forEach(centre => {
+                const card = document.createElement('div');
+                card.className = 'centre';
+
+                const title = document.createElement('h3');
+                title.textContent = centre.centre_name;
+
+                const address = document.createElement('p');
+                address.textContent = centre.address + ', ' + centre.city;
+
+                card.append(title, address);
+                $('centreList').appendChild(card);
+
+                const option = document.createElement('option');
+                option.value = centre.centre_id;
+                option.textContent = centre.centre_name + ' — ' + centre.city;
+                $('centreId').appendChild(option);
+            });
+        } catch (error) {
+            $('centreList').textContent = 'Could not load centres: ' + error.message;
+        }
+    }
+
+    $('registerForm').addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const form = Object.fromEntries(new FormData(event.target));
+
+        try {
+            const result = await api('/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form)
+            });
+
+            $('userId').value = result.user_id;
+            showMessage('registerMessage',
+                result.message + ' Your User ID is ' + result.user_id, true);
+
+            event.target.reset();
+        } catch (error) {
+            showMessage('registerMessage', error.message, false);
+        }
+    });
+
+    $('requestForm').addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const form = Object.fromEntries(new FormData(event.target));
+
+        if (!form.centre_id) delete form.centre_id;
+
+        try {
+            const result = await api('/api/requests', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form)
+            });
+
+            showMessage('requestMessage',
+                result.message + ' Request ID: ' + result.request_id, true);
+
+            event.target.reset();
+            await loadRequests();
+        } catch (error) {
+            showMessage('requestMessage', error.message, false);
+        }
+    });
+
+ 
+async function loadRequests() {
+    try {
+        const requests = await api('/api/requests');
+        const tbody = $('requestList');
+        tbody.replaceChildren();
+
+        if (!requests.length) {
+            const row = tbody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 7;
+            cell.textContent = 'No collection requests yet.';
+            return;
+        }
+
+        requests.forEach(request => {
+            const row = tbody.insertRow();
+
+            [
+                request.request_id,
+                request.user_name,
+                request.item_type,
+                request.estimated_weight,
+                request.collection_date || 'Not specified',
+                request.status
+            ].forEach(value => {
+                const cell = row.insertCell();
+                cell.textContent = value ?? '';
+            });
+
+            // Status update controls
+            const actionCell = row.insertCell();
+            const select = document.createElement('select');
+
+            ['Pending', 'Collected', 'Recycled'].forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.textContent = status;
+                select.appendChild(option);
+            });
+
+            select.value = request.status;
+
+            
+const weightInput = document.createElement('input');
+weightInput.type = 'number';
+weightInput.min = '0';
+weightInput.step = '0.1';
+weightInput.placeholder = 'Actual weight (kg)';
+weightInput.style.width = '150px';
+weightInput.style.marginRight = '8px';
+
+// Show saved actual weight, if available
+weightInput.value = request.actual_weight ?? '';
+
+const button = document.createElement('button');
+button.type = 'button';
+button.textContent = 'Update';
+
+button.addEventListener('click', async () => {
+    try {
+        const payload = {
+            status: select.value
+        };
+
+        if (select.value === 'Collected' || select.value === 'Recycled') {
+            if (
+                weightInput.value.trim() === '' ||
+                !Number.isFinite(Number(weightInput.value)) ||
+                Number(weightInput.value) < 0
+            ) {
+                alert('Please enter a valid actual weight in kg.');
+                return;
+            }
+
+            payload.actualWeight = Number(weightInput.value);
+        }
+
+        await api(`/api/requests/${request.request_id}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        await loadRequests();
+        await loadDashboard();
+
+        alert('Request status updated successfully!');
+    } catch (error) {
+        alert('Status update failed: ' + error.message);
+    }
+});
+
+actionCell.append(weightInput, select, button);
+    });
+} catch (error) {
+        $('requestList').textContent =
+            'Could not load requests: ' + error.message;
+    }
+}
+
+    
+async function loadDashboard() {
+    try {
+        const stats = await api('/api/dashboard');
+
+        document.getElementById('totalUsers').textContent =
+            stats.totalUsers ?? 0;
+
+        document.getElementById('totalRequests').textContent =
+            stats.totalRequests ?? 0;
+
+        document.getElementById('pendingRequests').textContent =
+            stats.pendingRequests ?? 0;
+
+        document.getElementById('collectedRequests').textContent =
+            stats.collectedRequests ?? 0;
+
+        document.getElementById('recycledRequests').textContent =
+            stats.recycledRequests ?? 0;
+
+        document.getElementById('totalCollectedWeight').textContent =
+            stats.totalCollectedWeight ?? 0;
+
+    } catch (error) {
+        console.error('Dashboard loading failed:', error);
+    }
+}
+
+document.getElementById('refreshDashboard')
+    .addEventListener('click', loadDashboard);
+
+
+    
+    $('refreshRequests').addEventListener('click', loadRequests);
+
+    loadCentres();
+    loadRequests();
+    loadDashboard();
+</script>
+</body>
+</html>
