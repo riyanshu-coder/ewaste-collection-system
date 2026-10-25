@@ -1,7 +1,8 @@
 
 const Database = require('better-sqlite3');
 
-const db = new Database('ewaste.db');
+const path = require('path');
+const db = new Database(path.join(__dirname, 'ewaste.db'));
 
 db.pragma('foreign_keys = ON');
 
