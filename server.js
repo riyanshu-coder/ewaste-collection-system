@@ -16,6 +16,7 @@ if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
 }
 
 app.disable('x-powered-by');
+app.set('trust proxy', 1);
 app.use(express.json({ limit: '20kb' }));
 app.use(express.urlencoded({ extended: false, limit: '20kb' }));
 app.use(session({
