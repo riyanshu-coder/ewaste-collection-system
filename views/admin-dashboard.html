@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Waste Management | Admin Dashboard</title>
+<style>
+:root{--green:#2fa873;--deep:#176b4a;--mint:#eaf7f0;--ink:#172a22;--muted:#718078;--line:#e4eee8;--bg:#f5f8f6;--white:#fff;--red:#d95858;--shadow:0 8px 28px rgba(26,73,49,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button,a{transition:.2s}a{color:inherit;text-decoration:none}
+.app{min-height:100vh;display:grid;grid-template-columns:238px minmax(0,1fr)}
+.sidebar{background:#101914;color:#dce8e0;padding:25px 14px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 12px 22px;border-bottom:1px solid #2a352e}
+.brand-mark{width:42px;height:42px;border-radius:14px;background:var(--green);display:grid;place-items:center;font-size:23px;color:white}
+.brand strong{display:block;font-size:17px;letter-spacing:.2px}.brand small{color:#91a79a;font-size:12px}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:1.6px;color:#7d9184;padding:0 13px 6px}
+.nav{display:grid;gap:5px}.nav a{display:flex;align-items:center;gap:13px;padding:12px 13px;border-radius:10px;color:#b7c8bd;font-size:13px;font-weight:600}
+.nav a span{width:20px;text-align:center;font-size:17px}.nav a:hover,.nav a.active{background:#253a2e;color:#6ed6a0}.side-bottom{margin-top:auto}.side-note{font-size:11px;line-height:1.6;color:#7d9184;padding:13px}
+.main{min-width:0;padding:26px clamp(16px,3vw,42px) 35px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}
+.search{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 15px;color:var(--muted);width:min(300px,45vw);font-size:13px}
+.top-actions{display:flex;align-items:center;gap:12px}.pill{background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:10px;font-size:12px;color:#506158}
+.primary{border:0;background:var(--green);color:#fff;padding:11px 16px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 4px 10px #2fa87325}
+.primary:hover{background:var(--deep);transform:translateY(-1px)}.icon-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;cursor:pointer}
+.heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:23px}.eyebrow{color:var(--green);font-size:11px;text-transform:uppercase;letter-spacing:1.4px;font-weight:800;margin-bottom:8px}
+h1{font-size:clamp(25px,3vw,34px);margin:0;letter-spacing:-.8px} .sub{color:var(--muted);font-size:13px;margin:9px 0 0}
+.section{scroll-margin-top:22px;margin-bottom:25px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px}.section-head h2{font-size:17px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:25px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.stat-label{font-size:12px;color:#65766b;font-weight:650}.stat-icon{width:37px;height:37px;border-radius:12px;background:var(--mint);display:grid;place-items:center;font-size:18px}
+.stat-number{font-size:31px;font-weight:800;letter-spacing:-1px;margin:17px 0 6px}.stat-foot{font-size:11px;color:var(--muted)}.dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:5px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:21px;box-shadow:var(--shadow);min-width:0}
+.overview-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:17px;margin-bottom:25px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.quick{border:1px solid var(--line);background:#fff;border-radius:13px;padding:15px;text-align:left;cursor:pointer;color:var(--ink);font-weight:700;font-size:12px;display:flex;gap:11px;align-items:center}
+.quick:hover{border-color:#9ed9b9;background:#f7fcf9;transform:translateY(-2px)}.quick-icon{font-size:20px;color:var(--green)}
+.chart-bars{height:190px;display:flex;align-items:end;gap:13px;padding:15px 6px 0;border-bottom:1px solid var(--line)}
+.bar-wrap{height:100%;flex:1;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:7px;min-width:0}
+.bar{width:min(30px,75%);min-height:4px;border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,#75d8a2,#2fa873)}
+.bar-label{font-size:10px;color:var(--muted);white-space:nowrap}.chart-legend{display:flex;gap:15px;font-size:11px;color:var(--muted);margin-top:15px}
+.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:5px}
+.donut-row{display:flex;align-items:center;justify-content:space-around;gap:20px;min-height:180px}.donut{width:145px;height:145px;border-radius:50%;background:conic-gradient(#2fa873 0 45%,#80d6a5 45% 70%,#bcebd0 70% 88%,#e7f6ed 88% 100%);display:grid;place-items:center;flex-shrink:0}
+.donut-inner{width:94px;height:94px;border-radius:50%;background:#fff;display:grid;place-content:center;text-align:center}.donut-inner strong{font-size:24px}.donut-inner small{font-size:10px;color:var(--muted)}
+.legend-list{display:grid;gap:12px;font-size:11px;color:#526258}.legend-list div{display:flex;align-items:center;gap:8px}.legend-list i{width:9px;height:9px;border-radius:3px;background:var(--green);display:inline-block;flex-shrink:0}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px;color:#405448}.field input,.field select,.field textarea{width:100%;border:1px solid #dce7df;background:#fbfdfb;border-radius:9px;padding:12px;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 3px #2fa87318}.full{grid-column:1/-1}.message{font-size:12px;font-weight:700;margin-top:12px;min-height:15px}
+.centre-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.centre{padding:16px;border:1px solid var(--line);background:#f9fcfa;border-radius:13px}.centre-icon{width:36px;height:36px;border-radius:11px;background:#e2f5e9;display:grid;place-items:center;font-size:18px}.centre h3{font-size:13px;margin:12px 0 6px}.centre p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;padding:13px 11px;border-bottom:1px solid #edf2ee;font-size:12px}th{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#75847b;background:#f8fbf9}tbody tr:hover{background:#fbfdfb}.status{display:inline-block;padding:5px 8px;border-radius:20px;background:#fff4df;color:#996915;font-size:10px;font-weight:800}.status.collected{background:#e7f7ed;color:#208252}.status.recycled{background:#e7f0ff;color:#315fa5}
+.inline-controls{display:flex;gap:6px;align-items:center;min-width:250px}.inline-controls select,.inline-controls input{border:1px solid var(--line);border-radius:7px;padding:7px;font-size:11px;min-width:90px}.inline-controls input{width:110px}.small-btn{border:0;background:var(--green);color:white;padding:8px 10px;border-radius:7px;font-size:10px;font-weight:700;cursor:pointer}
+.empty{color:var(--muted);font-size:12px;padding:20px 0}.footer{padding:18px 0;color:#8a9990;font-size:11px;text-align:center}
+.hidden{display:none!important}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:14px;gap:12px}.brand{padding:4px 7px 12px}.nav{display:flex;overflow:auto}.nav a{white-space:nowrap;padding:10px}.nav-label,.side-bottom{display:none}.main{padding:18px 13px}.topbar{margin-bottom:22px}.search{width:45vw}.pill{display:none}.heading{align-items:start;flex-direction:column}.centre-grid{grid-template-columns:1fr}.donut-row{flex-wrap:wrap}.stats{gap:10px}.stat{padding:14px}.stat-number{font-size:26px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">♻</div><div><strong>Waste Solutions</strong><small>Collection Management</small></div></div>
+  <div>
+    <div class="nav-label">Workspace</div>
+    <nav class="nav">
+      <a class="active" href="#dashboard"><span>▦</span>Dashboard</a>
+      <a href="#centres"><span>⌖</span>Collection Points</a>
+      <a href="#register"><span>♙</span>Users</a>
+      <a href="#requests"><span>▤</span>Collection Requests</a>
+      <a href="#analytics"><span>▥</span>Analytics</a>
+    </nav>
+  </div>
+  <div class="side-bottom">
+    <div class="nav-label">System</div>
+    <nav class="nav"><a href="#register"><span>⚙</span>Settings / Registration</a></nav>
+    <div class="side-note">♻ Recycle responsibly.<br>Protect our environment.</div>
+  </div>
+</aside>
+<main class="main">
+  <div class="topbar">
+    <input id="searchBox" class="search" placeholder="⌕  Search requests or centres..." aria-label="Search">
+    <div class="top-actions"><span class="pill">● System overview</span><button class="icon-btn" id="refreshAll" title="Refresh data">↻</button><button class="primary" id="addRequestTop">＋ New collection request</button><button class="icon-btn" id="logoutBtn" type="button">Logout</button></div>
+  </div>
+  <section id="dashboard" class="section">
+    <div class="heading"><div><div class="eyebrow">Admin workspace</div><h1>Welcome back 👋</h1><p class="sub">Here’s what’s happening with your e-waste collection system.</p></div><button class="primary" id="refreshDashboard">↻ Refresh dashboard</button></div>
+    <div class="stats">
+      <article class="stat"><div class="stat-top"><span class="stat-label">Total collection points</span><span class="stat-icon">⌖</span></div><div class="stat-number" id="totalCentres">—</div><div class="stat-foot"><span class="dot"></span>Registered recycling centres</div></article>
+      <article class="stat"><div class="stat-top"><span class="stat-label">Total users</span><span class="stat-icon">♙</span></div><div class="stat-number" id="totalUsers">0</div><div class="stat-foot">Registered in the system</div></article>
+      <article class="stat"><div class="stat-top"><span class="stat-label">Collection requests</span><span class="stat-icon">▤</span></div><div class="stat-number" id="totalRequests">0</div><div class="stat-foot"><span id="pendingRequests">0</span> pending requests</div></article>
+      <article class="stat"><div class="stat-top"><span class="stat-label">Collected e-waste</span><span class="stat-icon">⚖</span></div><div class="stat-number"><span id="totalCollectedWeight">0</span><small style="font-size:13px"> kg</small></div><div class="stat-foot"><span id="collectedRequests">0</span> collected · <span id="recycledRequests">0</span> recycled</div></article>
+    </div>
+  </section>
+  <section class="section overview-grid">
+    <div class="panel" id="analytics"><div class="section-head"><div><h2>Collection activity</h2><p>Current requests by status, based on saved records</p></div><span class="pill">Live data</span></div>
+      <div class="chart-bars" id="statusChart"><div class="empty">Loading collection activity…</div></div>
+      <div class="chart-legend"><span><i class="legend-dot"></i>Requests</span><span>Values update from your database</span></div>
+    </div>
+    <div class="panel"><div class="section-head"><div><h2>E-waste overview</h2><p>Request status distribution</p></div></div>
+      <div class="donut-row"><div class="donut" id="statusDonut"><div class="donut-inner"><strong id="donutTotal">0</strong><small>Requests</small></div></div>
+      <div class="legend-list"><div><i style="background:#2fa873"></i><span>Pending <b id="legendPending">0</b></span></div><div><i style="background:#80d6a5"></i><span>Collected <b id="legendCollected">0</b></span></div><div><i style="background:#bcebd0"></i><span>Recycled <b id="legendRecycled">0</b></span></div></div></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-head"><div><h2>Quick actions</h2><p>Jump straight to the most-used tools.</p></div></div>
+    <div class="quick-grid">
+      <button class="quick" data-target="collection"><span class="quick-icon">＋</span>New collection request</button>
+      <button class="quick" data-target="register"><span class="quick-icon">♙</span>Register a user</button>
+      <button class="quick" data-target="centres"><span class="quick-icon">⌖</span>View collection points</button>
+      <button class="quick" data-target="requests"><span class="quick-icon">▤</span>Manage requests</button>
+    </div>
+  </section>
+  <section id="centres" class="section panel">
+    <div class="section-head"><div><h2>⌖ Collection points</h2><p>Available recycling centres registered in your system.</p></div><span class="pill" id="centreCountLabel">Loading…</span></div>
+    <div id="centreList" class="centre-grid"><div class="empty">Loading collection points…</div></div>
+  </section>
+  <section id="register" class="section panel">
+    <div class="section-head"><div><h2>♙ User registration</h2><p>Add a user to the collection system. Their generated ID can be used for a request.</p></div></div>
+    <form id="registerForm"><div class="form-grid">
+      <div class="field"><label for="name">Full name</label><input id="name" name="name" placeholder="Enter full name" required></div>
+      <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" placeholder="name@example.com" required></div>
+      <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="Phone number" required></div>
+      <div class="field"><label for="address">Address</label><input id="address" name="address" placeholder="Area / city" required></div>
+    </div><button class="primary" type="submit" style="margin-top:16px">Register user →</button><div id="registerMessage" class="message" role="status"></div></form>
+  </section>
+  <section id="collection" class="section panel">
+    <div class="section-head"><div><h2>＋ Request e-waste collection</h2><p>Create a collection request for a registered user.</p></div></div>
+    <form id="requestForm"><div class="form-grid">
+      <div class="field"><label for="userId">Registered user ID</label><input id="userId" name="user_id" type="number" min="1" placeholder="User ID from registration" required></div>
+      <div class="field"><label for="centreId">Collection point</label><select id="centreId" name="centre_id"><option value="">No centre selected</option></select></div>
+      <div class="field"><label for="itemType">E-waste item</label><select id="itemType" name="item_type" required><option value="">Select item</option><option>Mobile Phone</option><option>Laptop</option><option>Computer</option><option>Television</option><option>Battery</option><option>Other Electronics</option></select></div>
+      <div class="field"><label for="condition">Item condition</label><select id="condition" name="item_condition" required><option value="">Select condition</option><option>Working</option><option>Damaged</option><option>Not Working</option></select></div>
+      <div class="field"><label for="weight">Estimated weight (kg)</label><input id="weight" name="estimated_weight" type="number" min="0.01" step="0.01" placeholder="e.g. 2.5" required></div>
+      <div class="field"><label for="date">Preferred collection date</label><input id="date" name="collection_date" type="date"></div>
+    </div><button class="primary" type="submit" style="margin-top:16px">Submit collection request →</button><div id="requestMessage" class="message" role="status"></div></form>
+  </section>
+  <section id="requests" class="section panel">
+    <div class="section-head"><div><h2>▤ Collection requests</h2><p>Review requests and update status / actual weight.</p></div><button class="primary" id="refreshRequests">↻ Refresh requests</button></div>
+    <div class="table-wrap"><table><thead><tr><th>ID</th><th>User</th><th>Item</th><th>Est. weight</th><th>Centre</th><th>Date</th><th>Status</th><th>Manage request</th></tr></thead><tbody id="requestList"><tr><td colspan="8" class="empty">Loading requests…</td></tr></tbody></table></div>
+  </section>
+  <div class="footer">♻ Waste Solutions · E-Waste Collection System · DBMS Mini Project</div>
+</main>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+async function api(url,options={}){const r=await fetch(url,options);let d={};try{d=await r.json()}catch(e){}if(!r.ok)throw new Error(d.error||'Request failed');return d}
+function message(id,text,ok){$(id).textContent=text;$(id).style.color=ok?'#218354':'#c83e3e'}
+let allRequests=[];
+async function loadCentres(){try{const centres=await api('/api/centres');$('centreList').replaceChildren();$('centreId').replaceChildren();const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='No centre selected';$('centreId').appendChild(placeholder);$('totalCentres').textContent=centres.length;$('centreCountLabel').textContent=centres.length+' centres';if(!centres.length){$('centreList').innerHTML='<div class="empty">No collection points available yet.</div>';return}centres.forEach(c=>{const card=document.createElement('article');card.className='centre';const ico=document.createElement('div');ico.className='centre-icon';ico.textContent='⌖';const h=document.createElement('h3');h.textContent=c.centre_name;const p=document.createElement('p');p.textContent=(c.address||'')+', '+(c.city||'');card.append(ico,h,p);$('centreList').appendChild(card);const op=document.createElement('option');op.value=c.centre_id;op.textContent=c.centre_name+' — '+c.city;$('centreId').appendChild(op)})}catch(e){$('centreList').innerHTML='';const p=document.createElement('p');p.className='empty';p.textContent='Could not load collection points: '+e.message;$('centreList').appendChild(p)}}
+async function loadDashboard(){try{const s=await api('/api/dashboard');$('totalUsers').textContent=s.totalUsers??0;$('totalRequests').textContent=s.totalRequests??0;$('pendingRequests').textContent=s.pendingRequests??0;$('collectedRequests').textContent=s.collectedRequests??0;$('recycledRequests').textContent=s.recycledRequests??0;$('totalCollectedWeight').textContent=Number(s.totalCollectedWeight||0).toLocaleString(undefined,{maximumFractionDigits:2});const p=s.pendingRequests||0,c=s.collectedRequests||0,r=s.recycledRequests||0,total=p+c+r;$('donutTotal').textContent=s.totalRequests??0;$('legendPending').textContent=p;$('legendCollected').textContent=c;$('legendRecycled').textContent=r;let a=total?p/total*100:0,b=total?c/total*100:0;let stop1=a,stop2=a+b;$('statusDonut').style.background=`conic-gradient(#2fa873 0 ${stop1}%,#80d6a5 ${stop1}% ${stop2}%,#bcebd0 ${stop2}% 100%)`;$('statusChart').replaceChildren();[['Pending',p],['Collected',c],['Recycled',r]].forEach(([label,val])=>{const wrap=document.createElement('div');wrap.className='bar-wrap';const bar=document.createElement('div');bar.className='bar';bar.style.height=(total?Math.max(6,val/Math.max(1,total)*145):6)+'px';bar.title=label+': '+val;const n=document.createElement('strong');n.style.fontSize='11px';n.textContent=val;const l=document.createElement('span');l.className='bar-label';l.textContent=label;wrap.append(n,bar,l);$('statusChart').appendChild(wrap)})}catch(e){console.error('Dashboard load failed',e)}}
+async function loadRequests(){try{allRequests=await api('/api/requests');renderRequests()}catch(e){$('requestList').innerHTML='';const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=8;td.className='empty';td.textContent='Could not load requests: '+e.message;tr.appendChild(td);$('requestList').appendChild(tr)}}
+function renderRequests(){const term=$('searchBox').value.trim().toLowerCase();const rows=allRequests.filter(r=>[r.request_id,r.user_name,r.item_type,r.centre_name,r.status,r.collection_date].some(v=>String(v||'').toLowerCase().includes(term)));const body=$('requestList');body.replaceChildren();if(!rows.length){const tr=body.insertRow(),td=tr.insertCell();td.colSpan=8;td.className='empty';td.textContent=term?'No matching requests.':'No collection requests yet.';return}rows.forEach(r=>{const tr=body.insertRow();[r.request_id,r.user_name,r.item_type,(r.estimated_weight??0)+' kg',r.centre_name||'Not assigned',r.collection_date||'Not specified'].forEach(v=>{const td=tr.insertCell();td.textContent=v??''});const status=tr.insertCell(),badge=document.createElement('span');badge.className='status '+String(r.status||'').toLowerCase();badge.textContent=r.status;status.appendChild(badge);const action=tr.insertCell(),controls=document.createElement('div');controls.className='inline-controls';const weight=document.createElement('input');weight.type='number';weight.min='0';weight.step='0.1';weight.placeholder='Actual kg';weight.value=r.actual_weight??'';const select=document.createElement('select');['Pending','Collected','Recycled'].forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;select.appendChild(o)});select.value=r.status;const btn=document.createElement('button');btn.className='small-btn';btn.textContent='Save';btn.addEventListener('click',async()=>{try{const payload={status:select.value};if(['Collected','Recycled'].includes(select.value)){if(weight.value.trim()===''||!Number.isFinite(Number(weight.value))||Number(weight.value)<0){alert('Please enter a valid actual weight in kg.');return}payload.actualWeight=Number(weight.value)}await api('/api/requests/'+r.request_id+'/status',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});await Promise.all([loadRequests(),loadDashboard()])}catch(e){alert('Could not update request: '+e.message)}});controls.append(weight,select,btn);action.appendChild(controls)})}
+$('registerForm').addEventListener('submit',async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));try{const r=await api('/api/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(f)});$('userId').value=r.user_id;message('registerMessage',r.message+' User ID: '+r.user_id,true);e.target.reset();await loadDashboard()}catch(err){message('registerMessage',err.message,false)}});
+$('requestForm').addEventListener('submit',async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));if(!f.centre_id)delete f.centre_id;try{const r=await api('/api/requests',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(f)});message('requestMessage',r.message+' Request ID: '+r.request_id,true);e.target.reset();await Promise.all([loadRequests(),loadDashboard()])}catch(err){message('requestMessage',err.message,false)}});
+$('logoutBtn').addEventListener('click',async()=>{try{await fetch('/admin/logout',{method:'POST'});location.href='/admin/login'}catch(e){alert('Logout failed. Please close this tab.')}});$('refreshRequests').addEventListener('click',loadRequests);$('refreshDashboard').addEventListener('click',async()=>{await Promise.all([loadCentres(),loadDashboard(),loadRequests()])});$('refreshAll').addEventListener('click',async()=>{await Promise.all([loadCentres(),loadDashboard(),loadRequests()])});$('searchBox').addEventListener('input',renderRequests);document.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.target).scrollIntoView({behavior:'smooth'})));$('addRequestTop').addEventListener('click',()=>$('collection').scrollIntoView({behavior:'smooth'}));
+Promise.all([loadCentres(),loadDashboard(),loadRequests()]);
+</script>
+</body>
+</html>

@@ -1,18 +1,13 @@
 {
-  "name": "ewaste_project",
-  "version": "1.0.0",
-  "description": "",
+  "name": "ewaste-collection-system",
+  "version": "1.1.0",
+  "description": "E-Waste Collection System with protected admin dashboard",
   "main": "server.js",
- "scripts": {
-  "start": "node server.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "scripts": { "start": "node server.js" },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
-    "express": "^5.3.0"
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1"
   }
 }

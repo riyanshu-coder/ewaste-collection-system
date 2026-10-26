@@ -1,0 +1,37 @@
+E-WASTE SECURITY UPDATE
+
+WHAT THIS UPDATE DOES
+- Public home page is a separate collection portal: centre listing, registration, and submitting a collection request.
+- Admin dashboard is served only at /admin after a successful admin login.
+- /api/requests (GET), /api/dashboard (GET), and /api/requests/:id/status (PUT) require an admin session.
+- The dashboard HTML is outside the public static folder, so it cannot be fetched directly as a static file.
+- Admin credentials and session secret are environment variables, not hard-coded in source.
+
+INSTALL LOCALLY
+1. Back up your whole D:\EWaste_Project folder first.
+2. Copy the files/folders in this update over the matching files in your project. Keep your existing ewaste.db and package-lock.json.
+3. In PowerShell, from D:\EWaste_Project run:
+   npm.cmd install express-session dotenv
+4. Copy .env.example to .env and replace all three placeholder values with your own private values.
+5. Make sure .env is listed in .gitignore. Do NOT push .env to GitHub.
+6. Run: npm.cmd start
+7. Public portal: http://localhost:3000
+   Admin login:   http://localhost:3000/admin/login
+8. Test as a logged-out visitor:
+   - /api/requests should return 401 JSON
+   - /api/dashboard should return 401 JSON
+   - PUT /api/requests/1/status should return 401 JSON
+   - /admin should redirect to /admin/login
+   - public registration and request submission should still work
+9. Sign in using the username/password you placed in .env. The dashboard should load at /admin.
+
+RENDER DEPLOYMENT
+1. In Render service -> Environment, set ADMIN_USERNAME, ADMIN_PASSWORD, SESSION_SECRET to private values.
+2. Set NODE_ENV=production (so the session cookie uses Secure on HTTPS).
+3. Commit and push only code files. Never commit .env.
+4. Wait for deploy, then test / and /admin/login on the live site.
+
+IMPORTANT LIMITATIONS
+- This is a basic admin login for the project, not a complete production identity system. It uses Express's default in-memory session store, so sessions reset on server restart/redeploy and this store is not recommended for large production use.
+- Public request submission currently uses a User ID and does not provide individual customer accounts or private self-service request history. It blocks public viewing/editing of all requests but does not verify that the person submitting a request owns that User ID. For a real service, add user authentication and ownership checks, login rate limiting, and a persistent session store.
+- Do not claim real-world collection is automatically performed by this app.
